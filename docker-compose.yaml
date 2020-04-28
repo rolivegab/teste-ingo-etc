@@ -1,0 +1,10 @@
+version: '3.7'
+services: 
+    banco:
+        image: postgres:12-alpine
+        environment: 
+            POSTGRES_PASSWORD: pgadmin
+            POSTGRES_USER: test-ingo
+            POSTGRES_DB: test-ingo
+        ports: 
+            - 3002:5432
