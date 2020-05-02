@@ -1,6 +1,7 @@
 import Express from 'express'
 import {Pool} from 'pg'
-import {config} from 'dotenv'  
+import {config} from 'dotenv'
+import ExpressHandlebars from 'express-handlebars'
 
 // Carrega as variáveis de ambiente do .env no process.env do node
 config()
@@ -10,6 +11,8 @@ config()
 const pool = new Pool()
 
 const app = Express()
+app.engine('handlebars', ExpressHandlebars());
+app.set('view engine', 'handlebars');
 
 app.listen(3001, () => {
     console.log(`A aplicação está escutando na porta ${3001}`)
@@ -28,18 +31,19 @@ app.get('/registrar', async (req, res) => {
 
 app.get('/usuarios', async (req, res) => {
     const result = await pool.query('SELECT * FROM users')
-    const table = `<table style="border: 1px solid black; padding: 5px;">
-        <tr>
-            <th>Usuário</th>
-            <th>Senha</th>
-        </tr>
-        ${result.rows.map(i => `<tr>
-            <td style="border: 1px solid black; padding: 5px;">${i.username}</td>
-            <td style="border: 1px solid black; padding: 5px;">${i.password}</td>
-        </tr>`).join('')}
-    </table>`
+    res.render('./view/home');
+    // const table = `<table style="border: 1px solid black; padding: 5px;">
+    //     <tr>
+    //         <th>Usuário</th>
+    //         <th>Senha</th>
+    //     </tr>
+    //     ${result.rows.map(i => `<tr>
+    //         <td style="border: 1px solid black; padding: 5px;">${i.username}</td>
+    //         <td style="border: 1px solid black; padding: 5px;">${i.password}</td>
+    //     </tr>`).join('')}
+    // </table>`
 
-    res.send(table)
+    // res.send(table)
 })
 
 app.get('/configurar', async (req, res) => {
